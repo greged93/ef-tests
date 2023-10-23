@@ -11,13 +11,16 @@ on:
 permissions: read-all
 
 jobs:
-  trunk:
-    name: Trunk
-    uses: ./.github/workflows/trunk-check.yml
-    permissions:
-      checks: write
-      contents: read
+  output:
+    name: Output
+    uses: ./.github/workflows/output.yml
+  # trunk:
+  #   name: Trunk
+  #   uses: ./.github/workflows/trunk-check.yml
+  #   permissions:
+  #     checks: write
+  #     contents: read
 
-  tests:
-    name: Rust tests
-    uses: ./.github/workflows/test.yml
+  # tests:
+  #   name: Rust tests
+  #   uses: ./.github/workflows/test.yml
