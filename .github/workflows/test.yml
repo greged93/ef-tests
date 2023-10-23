@@ -33,23 +33,19 @@ jobs:
         run: make setup-kakarot
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      - uses: taiki-e/install-action@nextest
       - name: run tests
         run: |
-          output=$(make unit 2>&1)
+          echo "$(make unit 2>&1 | base64 -w 0)" >> output
           exit_code=$?
-          echo "$output"
           if [ $exit_code -ne 0 ]; then
             exit $exit_code
           fi
           echo "test-output=$output" >> $GITHUB_OUTPUT
         id: run_tests
-      - name: display test output
-        run: echo "${{join(steps.run_tests.outputs.test-output, '\n')}}"
       - name: get resources
         run: python scripts/compute_resources.py
         env:
-          OUTPUT: ${{join(steps.run_tests.outputs.test-output, '\n')}}
+          OUTPUT: ${{ steps.run_tests.outputs.test-output }} | base64 -d
       # upload artifacts
       - name: upload resources
         uses: actions/upload-artifact@v3
