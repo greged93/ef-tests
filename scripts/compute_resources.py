@@ -3,10 +3,17 @@ import csv
 import json
 import os
 import re
+import subprocess
 
 
-def get_resource_usage(std_out: str):
-    matches = re.findall("Running test (.*)\n.*ResourcesMapping\((.*)\)", std_out)
+def get_resource_usage():
+    try:
+        result = subprocess.run("make unit", capture_output=True, text=True, shell=True, check=True, stderr=subprocess.STDOUT)
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(e.stdout)
+        raise RuntimeError("Error while running ef-tests") from e
+    matches = re.findall("Running test (.*)\n.*ResourcesMapping\((.*)\)", result.stdout)
     tests_resources = [dict(json.loads(resources), ** {"test": test_name}) for test_name, resources in matches]
     return tests_resources
 
@@ -26,10 +33,7 @@ def write_resources_to_csv(tests_resources: list, output_file: str = "resources.
             writer.writerow(row)
 
 def main():
-    std_output_base_64 = os.getenv("OUTPUT")
-    std_output = base64.b64decode(std_output_base_64).decode("utf-8")
-    print(std_output)
-    test_resources = get_resource_usage(std_output)
+    test_resources = get_resource_usage()
     write_resources_to_csv(test_resources, output_file="resources.csv")
 
 
