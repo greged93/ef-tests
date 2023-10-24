@@ -47,7 +47,7 @@ jobs:
       - name: get resources
         run: python scripts/compute_resources.py
         env:
-          OUTPUT: $(echo "${{ steps.run_tests.outputs.test-output }}" | base64 -d)
+          OUTPUT: ${{ steps.run_tests.outputs.test-output }}
       # upload artifacts
       - name: upload resources
         uses: actions/upload-artifact@v3
