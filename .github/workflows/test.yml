@@ -33,7 +33,7 @@ jobs:
         run: make setup-kakarot
         env:
           GITHUB_TOKEN: ${{ github.token }}
-      - name: get resources
+      - name: run tests and compute resources
         run: python scripts/compute_resources.py
       # upload artifacts
       - name: upload resources

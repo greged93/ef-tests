@@ -8,7 +8,7 @@ import subprocess
 
 def get_resource_usage():
     try:
-        result = subprocess.run("make unit", capture_output=True, text=True, shell=True, check=True, stderr=subprocess.STDOUT)
+        result = subprocess.run("make unit", stdout= subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True, check=True)
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(e.stdout)
